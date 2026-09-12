@@ -30,17 +30,17 @@ function ModernCheck({
             className={`inline-flex max-w-[9.5rem] items-center gap-1.5 rounded-full border px-2 py-1 text-left transition ${
                 checked
                     ? mine
-                        ? 'border-emerald-600 bg-emerald-600 text-white'
-                        : 'border-emerald-500 bg-emerald-500 text-white'
+                        ? 'border-emerald-700 bg-emerald-100 text-emerald-950'
+                        : 'border-emerald-400 bg-emerald-50 text-emerald-900'
                     : mine
-                      ? 'border-neutral-400 bg-white text-neutral-800'
-                      : 'border-neutral-200 bg-neutral-50 text-neutral-700'
+                      ? 'border-neutral-400 bg-white text-neutral-900'
+                      : 'border-neutral-200 bg-white text-neutral-800'
             } ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-[1.02]'}`}
             aria-label={mine ? `Mark day done, ${label}` : `${label} ${checked ? 'done' : 'not done'}`}
         >
             <span
                 className={`inline-flex size-4 shrink-0 items-center justify-center rounded-full border ${
-                    checked ? 'border-white/80 bg-white/15' : mine ? 'border-neutral-400' : 'border-neutral-300'
+                    checked ? 'border-emerald-700 bg-white text-emerald-800' : mine ? 'border-neutral-400' : 'border-neutral-300'
                 }`}
             >
                 {checked ? (
@@ -49,7 +49,7 @@ function ModernCheck({
                     </svg>
                 ) : null}
             </span>
-            <span className="truncate text-[11px] font-semibold leading-none">{label}</span>
+            <span className="truncate text-xs font-semibold leading-none">{label}</span>
         </button>
     );
 }

@@ -167,7 +167,7 @@ export default function AdminRoutine({
                             value={createForm.data.task}
                             onChange={(e) => createForm.setData('task', e.target.value)}
                             placeholder="Chapter 1 — read and note the full chapter"
-                            className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs focus-visible:ring-1 focus-visible:outline-hidden md:text-sm"
+                            className="flex w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-base text-neutral-900 shadow-xs placeholder:text-neutral-500 focus-visible:ring-1 focus-visible:ring-neutral-400 focus-visible:outline-hidden md:text-sm"
                         />
                         <InputError message={createForm.errors.task} />
                     </div>
@@ -212,7 +212,7 @@ export default function AdminRoutine({
                                             rows={3}
                                             value={editForm.data.task}
                                             onChange={(e) => editForm.setData('task', e.target.value)}
-                                            className="border-input focus-visible:ring-ring flex w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs focus-visible:ring-1 focus-visible:outline-hidden md:text-sm"
+                                            className="flex w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-base text-neutral-900 shadow-xs focus-visible:ring-1 focus-visible:ring-neutral-400 focus-visible:outline-hidden md:text-sm"
                                         />
                                         <InputError message={editForm.errors.task} />
                                     </div>
