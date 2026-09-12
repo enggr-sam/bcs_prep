@@ -6,8 +6,8 @@ Laravel + React (Inertia) study routine app. SQLite now; switch `DB_*` in `.env`
 
 | Role | Mobile | Password |
 | --- | --- | --- |
-| Admin | 01700000000 | password |
-| Student | 01800000000 | password |
+| Admin | 01700000000 | iamadmin |
+| Student | 01800000000 | iamstudent |
 
 Students can also register with mobile + password only. After login they only see the routine table. Admin can add, edit, and delete days.
 

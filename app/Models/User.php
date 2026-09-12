@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -40,5 +41,10 @@ class User extends Authenticatable
     public function homeRoute(): string
     {
         return $this->isAdmin() ? 'admin.routine.index' : 'routine.index';
+    }
+
+    public function completedRoutineItems(): BelongsToMany
+    {
+        return $this->belongsToMany(RoutineItem::class, 'routine_item_completions')->withTimestamps();
     }
 }

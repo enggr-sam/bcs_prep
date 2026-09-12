@@ -42,4 +42,5 @@ export interface RoutineItem {
     subject: string;
     task: string;
     position: number;
+    done?: boolean;
 }

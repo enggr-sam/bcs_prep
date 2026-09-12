@@ -14,6 +14,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('routine', [RoutineController::class, 'index'])->name('routine.index');
+    Route::post('routine/{routineItem}/toggle', [RoutineController::class, 'toggle'])->name('routine.toggle');
     Route::get('dashboard', fn () => redirect()->route(auth()->user()->homeRoute()))->name('dashboard');
 });
 
