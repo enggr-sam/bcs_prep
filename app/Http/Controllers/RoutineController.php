@@ -17,6 +17,7 @@ class RoutineController extends Controller
         $current = $request->user();
         $students = User::query()
             ->where('role', 'student')
+            ->orderBy('name')
             ->orderBy('id')
             ->get(['id', 'name', 'mobile']);
 
@@ -49,7 +50,7 @@ class RoutineController extends Controller
                     'canToggle' => $this->isCheckableDate($item),
                     'marks' => $students->map(fn (User $student) => [
                         'id' => $student->id,
-                        'label' => $this->studentLabel($student),
+                        'label' => $this->studentName($student),
                         'done' => $doneIds->contains($student->id),
                     ])->values(),
                 ];
@@ -62,8 +63,7 @@ class RoutineController extends Controller
 
                 return [
                     'id' => $student->id,
-                    'label' => $this->studentLabel($student),
-                    'mobile' => $student->mobile,
+                    'label' => $this->studentName($student),
                     'done' => $done,
                     'total' => $total,
                     'percent' => $percent,
@@ -111,16 +111,10 @@ class RoutineController extends Controller
             || $date->equalTo(now()->subDay()->startOfDay());
     }
 
-    private function studentLabel(User $student): string
+    private function studentName(User $student): string
     {
         $name = trim((string) $student->name);
 
-        if ($name !== '' && strcasecmp($name, 'Student') !== 0) {
-            return mb_substr($name, 0, 8);
-        }
-
-        $mobile = $student->mobile;
-
-        return strlen($mobile) >= 4 ? substr($mobile, -4) : $mobile;
+        return $name !== '' ? $name : 'Student';
     }
 }

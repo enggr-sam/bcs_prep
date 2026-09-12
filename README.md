@@ -7,7 +7,7 @@ Laravel + React (Inertia) study routine app. SQLite now; switch `DB_*` in `.env`
 | Role | Mobile | Password |
 | --- | --- | --- |
 | Admin | 01700000000 | iamadmin |
-| Student | 01800000000 | iamstudent |
+| Student | (register first) | iamstudent |
 
 Students register with name and mobile only. Login uses the hardcoded class password. Students can tick only today and yesterday. Admin can add, edit, and delete days.
 

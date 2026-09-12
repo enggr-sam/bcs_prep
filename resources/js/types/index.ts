@@ -45,7 +45,6 @@ export interface Standing {
     id: number;
     rank: number;
     label: string;
-    mobile: string;
     done: number;
     total: number;
     percent: number;

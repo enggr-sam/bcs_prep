@@ -21,16 +21,6 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        User::query()->updateOrCreate(
-            ['mobile' => '01800000000'],
-            [
-                'name' => 'Student',
-                'email' => 'student@bcs.test',
-                'role' => 'student',
-                'password' => 'iamstudent',
-            ],
-        );
-
         $start = Carbon::parse('2026-09-13');
         $keepIds = [];
 

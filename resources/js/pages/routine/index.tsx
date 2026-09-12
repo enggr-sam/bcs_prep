@@ -27,24 +27,29 @@ function ModernCheck({
             disabled={disabled}
             onClick={onToggle}
             title={mine ? `You · ${label}` : label}
-            className={`inline-flex size-8 shrink-0 items-center justify-center rounded-full border-2 transition ${
+            className={`inline-flex max-w-[9.5rem] items-center gap-1.5 rounded-full border px-2 py-1 text-left transition ${
                 checked
                     ? mine
                         ? 'border-emerald-600 bg-emerald-600 text-white'
                         : 'border-emerald-500 bg-emerald-500 text-white'
                     : mine
-                      ? 'border-neutral-400 bg-white'
-                      : 'border-neutral-200 bg-neutral-50 text-neutral-300'
-            } ${disabled ? 'cursor-default opacity-80' : 'cursor-pointer hover:scale-105'}`}
-            aria-label={mine ? `Mark day done, ${label}` : `Student ${label} ${checked ? 'done' : 'not done'}`}
+                      ? 'border-neutral-400 bg-white text-neutral-800'
+                      : 'border-neutral-200 bg-neutral-50 text-neutral-700'
+            } ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-[1.02]'}`}
+            aria-label={mine ? `Mark day done, ${label}` : `${label} ${checked ? 'done' : 'not done'}`}
         >
-            {checked ? (
-                <svg viewBox="0 0 20 20" className="size-4 fill-none stroke-current stroke-[2.5]">
-                    <path d="M5 10.5 8.2 14 15 6" />
-                </svg>
-            ) : (
-                <span className="text-[10px] font-semibold leading-none">{label.slice(-2)}</span>
-            )}
+            <span
+                className={`inline-flex size-4 shrink-0 items-center justify-center rounded-full border ${
+                    checked ? 'border-white/80 bg-white/15' : mine ? 'border-neutral-400' : 'border-neutral-300'
+                }`}
+            >
+                {checked ? (
+                    <svg viewBox="0 0 20 20" className="size-3 fill-none stroke-current stroke-[2.5]">
+                        <path d="M5 10.5 8.2 14 15 6" />
+                    </svg>
+                ) : null}
+            </span>
+            <span className="truncate text-[11px] font-semibold leading-none">{label}</span>
         </button>
     );
 }
@@ -206,8 +211,8 @@ export default function RoutineIndex({
                         >
                             <div className="mb-1 flex items-center justify-between gap-3">
                                 <p className="text-sm font-medium">
-                                    #{row.rank} · {row.isYou ? `You · ${row.label}` : row.label}
-                                    {row.isYou ? <span className="ml-2 text-xs font-normal text-emerald-700">your score</span> : null}
+                                    #{row.rank} · {row.label}
+                                    {row.isYou ? <span className="ml-2 text-xs font-normal text-emerald-700">you</span> : null}
                                 </p>
                                 <p className="text-sm font-semibold text-emerald-700">{row.percent}%</p>
                             </div>
