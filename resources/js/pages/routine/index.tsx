@@ -62,16 +62,17 @@ function MarkRow({
 }) {
     const mine = marks.find((mark) => mark.id === currentUserId);
     const others = marks.filter((mark) => mark.id !== currentUserId);
+    const mineEnabled = canCheck;
 
     return (
         <div className="flex flex-wrap items-center gap-1.5">
             {mine ? (
                 <ModernCheck
                     checked={mine.done}
-                    disabled={!canCheck}
+                    disabled={!mineEnabled}
                     label={mine.label}
                     mine
-                    onToggle={canCheck ? onToggleMine : undefined}
+                    onToggle={mineEnabled ? onToggleMine : undefined}
                 />
             ) : null}
             {others.map((mark) => (
@@ -95,7 +96,7 @@ export default function RoutineIndex({
     canCheck: boolean;
 }) {
     const toggle = (item: RoutineItem) => {
-        if (!canCheck) {
+        if (!canCheck || !item.canToggle) {
             return;
         }
 
@@ -106,7 +107,9 @@ export default function RoutineIndex({
         <ShellLayout title="Study routine">
             <Head title="Routine" />
             <h1 className="mb-1 text-2xl font-semibold">Routine</h1>
-            <p className="mb-5 text-sm text-neutral-500">13 September 2026 → 19 October 2026</p>
+            <p className="mb-5 text-sm text-neutral-500">
+                13 September 2026 → 19 October 2026. You can tick only today and yesterday.
+            </p>
 
             <div className="space-y-3 md:space-y-0 md:overflow-x-auto md:rounded-lg md:border md:border-neutral-200 md:bg-white">
                 <div className="hidden md:block">
@@ -139,7 +142,7 @@ export default function RoutineIndex({
                                             <MarkRow
                                                 marks={item.marks}
                                                 currentUserId={currentUserId}
-                                                canCheck={canCheck}
+                                                canCheck={canCheck && item.canToggle}
                                                 onToggleMine={() => toggle(item)}
                                             />
                                         </td>
@@ -171,7 +174,7 @@ export default function RoutineIndex({
                                 <MarkRow
                                     marks={item.marks}
                                     currentUserId={currentUserId}
-                                    canCheck={canCheck}
+                                    canCheck={canCheck && item.canToggle}
                                     onToggleMine={() => toggle(item)}
                                 />
                                 <div className="mt-3">
@@ -203,7 +206,7 @@ export default function RoutineIndex({
                         >
                             <div className="mb-1 flex items-center justify-between gap-3">
                                 <p className="text-sm font-medium">
-                                    #{row.rank} · {row.isYou ? 'You' : `…${row.label}`}
+                                    #{row.rank} · {row.isYou ? `You · ${row.label}` : row.label}
                                     {row.isYou ? <span className="ml-2 text-xs font-normal text-emerald-700">your score</span> : null}
                                 </p>
                                 <p className="text-sm font-semibold text-emerald-700">{row.percent}%</p>

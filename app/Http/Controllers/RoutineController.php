@@ -46,6 +46,7 @@ class RoutineController extends Controller
                     'subject' => $item->subject,
                     'task' => $item->task,
                     'position' => $item->position,
+                    'canToggle' => $this->isCheckableDate($item),
                     'marks' => $students->map(fn (User $student) => [
                         'id' => $student->id,
                         'label' => $this->studentLabel($student),
@@ -95,14 +96,29 @@ class RoutineController extends Controller
         $user = $request->user();
 
         abort_unless($user && ! $user->isAdmin(), 403);
+        abort_unless($this->isCheckableDate($routineItem), 403);
 
         $user->completedRoutineItems()->toggle([$routineItem->id]);
 
         return back();
     }
 
+    private function isCheckableDate(RoutineItem $item): bool
+    {
+        $date = $item->date->startOfDay();
+
+        return $date->equalTo(now()->startOfDay())
+            || $date->equalTo(now()->subDay()->startOfDay());
+    }
+
     private function studentLabel(User $student): string
     {
+        $name = trim((string) $student->name);
+
+        if ($name !== '' && strcasecmp($name, 'Student') !== 0) {
+            return mb_substr($name, 0, 8);
+        }
+
         $mobile = $student->mobile;
 
         return strlen($mobile) >= 4 ? substr($mobile, -4) : $mobile;

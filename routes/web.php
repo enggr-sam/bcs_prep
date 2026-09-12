@@ -13,9 +13,12 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware('auth')->group(function () {
+    Route::get('dashboard', fn () => redirect()->route(auth()->user()->homeRoute()))->name('dashboard');
+});
+
+Route::middleware(['auth', 'student'])->group(function () {
     Route::get('routine', [RoutineController::class, 'index'])->name('routine.index');
     Route::post('routine/{routineItem}/toggle', [RoutineController::class, 'toggle'])->name('routine.toggle');
-    Route::get('dashboard', fn () => redirect()->route(auth()->user()->homeRoute()))->name('dashboard');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

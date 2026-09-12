@@ -59,5 +59,6 @@ export interface RoutineItem {
     subject: string;
     task: string;
     position: number;
+    canToggle: boolean;
     marks: StudentMark[];
 }

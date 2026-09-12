@@ -1,6 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import InputError from '@/components/input-error';
+import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,7 +20,7 @@ export default function Login({ status }: { status?: string }) {
     };
 
     return (
-        <AuthLayout title="Log in" description="Students: enter your mobile and the shared password. A new number is created automatically.">
+        <AuthLayout title="Log in" description="Use your registered mobile and the class password">
             <Head title="Log in" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-2">
@@ -46,13 +47,16 @@ export default function Login({ status }: { status?: string }) {
                         autoComplete="current-password"
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
-                        placeholder="Student shared password"
+                        placeholder="Class password"
                     />
                     <InputError message={errors.password} />
                 </div>
                 <Button type="submit" className="w-full" disabled={processing}>
                     Log in
                 </Button>
+                <p className="text-muted-foreground text-center text-sm">
+                    New student? <TextLink href={route('register')}>Register with name and mobile</TextLink>
+                </p>
             </form>
             {status ? <p className="text-center text-sm text-green-700">{status}</p> : null}
         </AuthLayout>

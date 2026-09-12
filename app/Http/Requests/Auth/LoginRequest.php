@@ -29,33 +29,19 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $mobile = (string) $this->string('mobile');
+        $user = User::query()->where('mobile', (string) $this->string('mobile'))->first();
         $password = (string) $this->string('password');
-        $studentPassword = (string) config('auth.student_password');
 
-        $user = User::query()->where('mobile', $mobile)->first();
-
-        if ($user?->isAdmin()) {
-            if (! Auth::attempt(['mobile' => $mobile, 'password' => $password], $this->boolean('remember'))) {
-                $this->failLogin();
-            }
-
-            RateLimiter::clear($this->throttleKey());
-
-            return;
-        }
-
-        if ($password !== $studentPassword) {
+        if (! $user) {
             $this->failLogin();
         }
 
-        if (! $user) {
-            $user = User::query()->create([
-                'name' => 'Student',
-                'mobile' => $mobile,
-                'role' => 'student',
-                'password' => $studentPassword,
-            ]);
+        $expected = $user->isAdmin()
+            ? (string) config('auth.admin_password')
+            : (string) config('auth.student_password');
+
+        if ($password !== $expected) {
+            $this->failLogin();
         }
 
         Auth::login($user, $this->boolean('remember'));

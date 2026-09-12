@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,21 +20,19 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
+            'name' => ['required', 'string', 'max:80'],
             'mobile' => ['required', 'string', 'regex:/^[0-9]{10,15}$/', 'unique:'.User::class],
-            'password' => ['required', 'string', 'min:6'],
         ]);
 
-        $user = User::create([
-            'name' => 'Student',
+        $user = User::query()->create([
+            'name' => $request->string('name')->trim(),
             'mobile' => $request->mobile,
             'role' => 'student',
-            'password' => $request->password,
+            'password' => config('auth.student_password'),
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return to_route($user->homeRoute());
+        return redirect()->route('login')->with('status', 'Account created. Log in with the class password.');
     }
 }

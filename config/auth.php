@@ -114,5 +114,7 @@ return [
 
     'student_password' => env('STUDENT_PASSWORD', 'iamstudent'),
 
+    'admin_password' => env('ADMIN_PASSWORD', 'iamadmin'),
+
 ];
 
