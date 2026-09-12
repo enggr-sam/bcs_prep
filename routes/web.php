@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\RoutineItemController;
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\RoutineController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('routine', [RoutineItemController::class, 'store'])->name('routine.store');
     Route::put('routine/{routineItem}', [RoutineItemController::class, 'update'])->name('routine.update');
     Route::delete('routine/{routineItem}', [RoutineItemController::class, 'destroy'])->name('routine.destroy');
+    Route::delete('students/{user}', [StudentController::class, 'destroy'])->name('students.destroy');
 });
 
 require __DIR__.'/auth.php';

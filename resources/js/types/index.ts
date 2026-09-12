@@ -24,7 +24,26 @@ export interface NavItem {
 export interface SharedData {
     name: string;
     auth: Auth;
+    status?: string;
     [key: string]: unknown;
+}
+
+export interface AdminStudent {
+    id: number;
+    name: string;
+    mobile: string;
+    done: number;
+    total: number;
+}
+
+export interface AdminDay {
+    id: number;
+    date: string;
+    weekday: string;
+    subject: string;
+    task: string;
+    position: number;
+    ticks: number;
 }
 
 export interface User {

@@ -3,8 +3,9 @@ import { type PropsWithChildren } from 'react';
 import { type SharedData } from '@/types';
 
 export default function ShellLayout({ children, title }: PropsWithChildren<{ title: string }>) {
-    const { auth } = usePage<SharedData>().props;
-    const user = auth.user;
+    const page = usePage<SharedData>();
+    const user = page.props.auth.user;
+    const onAdmin = page.url.startsWith('/admin');
 
     return (
         <div className="min-h-svh bg-neutral-50 text-neutral-900">
@@ -20,9 +21,9 @@ export default function ShellLayout({ children, title }: PropsWithChildren<{ tit
                                 {user.mobile}
                                 {user.role === 'admin' ? ' · admin' : ''}
                             </span>
-                            {user.role === 'admin' ? (
+                            {user.role === 'admin' && !onAdmin ? (
                                 <Link href={route('admin.routine.index')} className="hover:underline">
-                                    Edit
+                                    Admin
                                 </Link>
                             ) : null}
                             <Link href={route('logout')} method="post" as="button" className="hover:underline">

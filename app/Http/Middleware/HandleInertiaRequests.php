@@ -29,6 +29,7 @@ class HandleInertiaRequests extends Middleware
                     'role' => $user->role,
                 ] : null,
             ],
+            'status' => $request->session()->get('status'),
         ];
     }
 }
