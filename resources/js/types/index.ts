@@ -35,6 +35,23 @@ export interface User {
     [key: string]: unknown;
 }
 
+export interface StudentMark {
+    id: number;
+    label: string;
+    done: boolean;
+}
+
+export interface Standing {
+    id: number;
+    rank: number;
+    label: string;
+    mobile: string;
+    done: number;
+    total: number;
+    percent: number;
+    isYou: boolean;
+}
+
 export interface RoutineItem {
     id: number;
     date: string;
@@ -42,5 +59,5 @@ export interface RoutineItem {
     subject: string;
     task: string;
     position: number;
-    done?: boolean;
+    marks: StudentMark[];
 }

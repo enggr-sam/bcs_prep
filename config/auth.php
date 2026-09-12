@@ -112,4 +112,7 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    'student_password' => env('STUDENT_PASSWORD', 'iamstudent'),
+
 ];
+

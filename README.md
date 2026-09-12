@@ -9,7 +9,7 @@ Laravel + React (Inertia) study routine app. SQLite now; switch `DB_*` in `.env`
 | Admin | 01700000000 | iamadmin |
 | Student | 01800000000 | iamstudent |
 
-Students can also register with mobile + password only. After login they only see the routine table. Admin can add, edit, and delete days.
+Students do not register. Any new mobile number can log in with the shared student password and is created automatically. After login they only see the routine table. Admin can add, edit, and delete days.
 
 ## Run
 

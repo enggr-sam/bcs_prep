@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\RoutineItem;
+use App\Models\RoutineItemCompletion;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,31 +14,79 @@ class RoutineController extends Controller
 {
     public function index(Request $request): Response
     {
-        $user = $request->user();
-        $doneIds = $user?->isAdmin()
-            ? collect()
-            : $user?->completedRoutineItems()->pluck('routine_items.id') ?? collect();
+        $current = $request->user();
+        $students = User::query()
+            ->where('role', 'student')
+            ->orderBy('id')
+            ->get(['id', 'name', 'mobile']);
+
+        $total = RoutineItem::query()->count();
+        $doneByUser = RoutineItemCompletion::query()
+            ->selectRaw('user_id, count(*) as done_count')
+            ->whereIn('user_id', $students->pluck('id'))
+            ->groupBy('user_id')
+            ->pluck('done_count', 'user_id');
+
+        $donePairs = RoutineItemCompletion::query()
+            ->whereIn('user_id', $students->pluck('id'))
+            ->get(['user_id', 'routine_item_id'])
+            ->groupBy('routine_item_id');
 
         $items = RoutineItem::query()
             ->orderBy('date')
             ->orderBy('position')
             ->get()
-            ->map(fn (RoutineItem $item) => [
-                'id' => $item->id,
-                'date' => $item->date->toDateString(),
-                'weekday' => $item->weekday,
-                'subject' => $item->subject,
-                'task' => $item->task,
-                'position' => $item->position,
-                'done' => $doneIds->contains($item->id),
-            ]);
+            ->map(function (RoutineItem $item) use ($students, $donePairs) {
+                $doneIds = $donePairs->get($item->id, collect())->pluck('user_id');
+
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date->toDateString(),
+                    'weekday' => $item->weekday,
+                    'subject' => $item->subject,
+                    'task' => $item->task,
+                    'position' => $item->position,
+                    'marks' => $students->map(fn (User $student) => [
+                        'id' => $student->id,
+                        'label' => $this->studentLabel($student),
+                        'done' => $doneIds->contains($student->id),
+                    ])->values(),
+                ];
+            });
+
+        $standings = $students
+            ->map(function (User $student) use ($doneByUser, $total, $current) {
+                $done = (int) ($doneByUser[$student->id] ?? 0);
+                $percent = $total === 0 ? 0 : (int) round(($done / $total) * 100);
+
+                return [
+                    'id' => $student->id,
+                    'label' => $this->studentLabel($student),
+                    'mobile' => $student->mobile,
+                    'done' => $done,
+                    'total' => $total,
+                    'percent' => $percent,
+                    'isYou' => $current?->id === $student->id,
+                ];
+            })
+            ->sortBy([
+                ['percent', 'desc'],
+                ['done', 'desc'],
+                ['id', 'asc'],
+            ])
+            ->values()
+            ->map(function (array $row, int $index) {
+                $row['rank'] = $index + 1;
+
+                return $row;
+            });
 
         return Inertia::render('routine/index', [
             'items' => $items,
+            'standings' => $standings,
             'today' => now()->toDateString(),
-            'doneCount' => $items->where('done', true)->count(),
-            'totalCount' => $items->count(),
-            'canCheck' => (bool) $user && ! $user->isAdmin(),
+            'currentUserId' => $current?->id,
+            'canCheck' => (bool) $current && ! $current->isAdmin(),
         ]);
     }
 
@@ -49,5 +99,12 @@ class RoutineController extends Controller
         $user->completedRoutineItems()->toggle([$routineItem->id]);
 
         return back();
+    }
+
+    private function studentLabel(User $student): string
+    {
+        $mobile = $student->mobile;
+
+        return strlen($mobile) >= 4 ? substr($mobile, -4) : $mobile;
     }
 }
