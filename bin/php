@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SCAN="/etc/php/8.3/cli/conf.d:${ROOT}/.php-ext"
+if [ -d /etc/php/8.3/mods-available ]; then
+    SCAN="/etc/php/8.3/cli/conf.d:${ROOT}/.php-ext"
+fi
+export PHP_INI_SCAN_DIR="${PHP_INI_SCAN_DIR:-$SCAN}"
+exec php "$@"
